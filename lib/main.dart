@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shopping_list_app/core/bloc_observer/bloc_observer.dart';
 import 'package:shopping_list_app/features/groceries/view-model/groceries_cubit.dart';
 import 'package:shopping_list_app/features/groceries/view/screens/category_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: HydratedStorageDirectory((await getTemporaryDirectory()).path),
+    storageDirectory: HydratedStorageDirectory(
+      (await getTemporaryDirectory()).path,
+    ),
   );
+  Bloc.observer = AppBlocObserver();
   runApp(const MyApp());
 }
 
@@ -29,7 +33,10 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color.fromARGB(255, 50, 58, 60),
       ),
-      home: BlocProvider<GroceriesCubit>(create: (BuildContext context) => GroceriesCubit(), child: const CategoryPage()),
+      home: BlocProvider<GroceriesCubit>(
+        create: (BuildContext context) => GroceriesCubit(),
+        child: const CategoryPage(),
+      ),
     );
   }
 }

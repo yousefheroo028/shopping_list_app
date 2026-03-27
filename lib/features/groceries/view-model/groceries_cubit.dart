@@ -24,22 +24,31 @@ class GroceriesCubit extends HydratedCubit<GroceriesState> {
 
   void removeGroceryItem(String groceryItemId) {
     emit(GroceriesLoading(state.groceryItems));
-    emit(GroceriesLoaded(state.groceryItems.where((GroceryItem item) => item.id != groceryItemId).toList()));
+    emit(
+      GroceriesLoaded(
+        state.groceryItems
+            .where((GroceryItem item) => item.id != groceryItemId)
+            .toList(),
+      ),
+    );
   }
 
   @override
   GroceriesState? fromJson(Map<String, dynamic> json) {
-    final List<GroceryItem> items = (json['groceryItems']).map((e) => GroceryItem.fromJson(e)).toList();
-    if (kDebugMode) {
-      print(items);
-    }
+    final List<dynamic> rawList =
+        (json['groceryItems'] as List<dynamic>? ?? const <dynamic>[]);
+    final List<GroceryItem> items = rawList
+        .map((e) => GroceryItem.fromJson(e as Map<String, dynamic>))
+        .toList(growable: false);
     return GroceriesLoaded(items);
   }
 
   @override
   Map<String, dynamic> toJson(GroceriesState state) {
     return <String, dynamic>{
-      'groceryItems': state.groceryItems.map((GroceryItem e) => e.toJson()).toList(),
+      'groceryItems': state.groceryItems
+          .map((GroceryItem e) => e.toJson())
+          .toList(),
     };
   }
 }

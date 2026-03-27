@@ -6,7 +6,12 @@ class GroceryItem {
   final int quantity;
   final CategoryEnum category;
 
-  const GroceryItem({required this.id, required this.name, required this.quantity, required this.category});
+  const GroceryItem({
+    required this.id,
+    required this.name,
+    required this.quantity,
+    required this.category,
+  });
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
