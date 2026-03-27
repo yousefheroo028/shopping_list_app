@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:shopping_list_app/core/contants.dart';
@@ -30,7 +31,7 @@ class GroceriesCubit extends HydratedCubit<GroceriesState> {
   GroceriesState? fromJson(Map<String, dynamic> json) {
     return GroceriesLoaded(
       (json['groceryItems'] as List<dynamic>)
-          .map((encodedItem) => GroceryItem.fromJson(encodedItem as Map<String, dynamic>))
+          .map((dynamic encodedItem) => GroceryItem.fromJson(encodedItem as Map<String, dynamic>))
           .toList(),
     );
   }

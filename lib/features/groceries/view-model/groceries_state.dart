@@ -1,6 +1,6 @@
 part of 'groceries_cubit.dart';
 
-sealed class GroceriesState {
+sealed class GroceriesState with EquatableMixin {
   final List<GroceryItem> groceryItems;
 
   const GroceriesState(this.groceryItems);
@@ -8,12 +8,21 @@ sealed class GroceriesState {
 
 final class GroceriesInitial extends GroceriesState {
   const GroceriesInitial() : super(const <GroceryItem>[]);
+
+  @override
+  List<Object?> get props => <Object?>[];
 }
 
 final class GroceriesLoading extends GroceriesState {
   const GroceriesLoading(super.groceryItems);
+
+  @override
+  List<Object?> get props => super.groceryItems;
 }
 
 final class GroceriesLoaded extends GroceriesState {
   const GroceriesLoaded(super.groceryItems);
+
+  @override
+  List<Object?> get props => super.groceryItems;
 }
