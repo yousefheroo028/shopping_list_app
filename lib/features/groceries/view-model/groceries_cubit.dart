@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:shopping_list_app/core/contants.dart';
@@ -29,17 +28,17 @@ class GroceriesCubit extends HydratedCubit<GroceriesState> {
 
   @override
   GroceriesState? fromJson(Map<String, dynamic> json) {
-    final List<GroceryItem> items = (json['groceryItems']).map((e) => GroceryItem.fromJson(e)).toList();
-    if (kDebugMode) {
-      print(items);
-    }
-    return GroceriesLoaded(items);
+    return GroceriesLoaded(
+      (json['groceryItems'] as List<dynamic>)
+          .map((encodedItem) => GroceryItem.fromJson(encodedItem as Map<String, dynamic>))
+          .toList(),
+    );
   }
 
   @override
   Map<String, dynamic> toJson(GroceriesState state) {
     return <String, dynamic>{
-      'groceryItems': state.groceryItems.map((GroceryItem e) => e.toJson()).toList(),
+      'groceryItems': state.groceryItems.map((GroceryItem decodedItem) => decodedItem.toJson()).toList(),
     };
   }
 }

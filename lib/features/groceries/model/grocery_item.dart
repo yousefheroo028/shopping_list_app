@@ -10,6 +10,7 @@ class GroceryItem {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
+      'id': id,
       'name': name,
       'quantity': quantity,
       'category': category.name,
