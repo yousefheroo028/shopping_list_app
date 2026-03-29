@@ -8,7 +8,7 @@ import 'package:shopping_list_app/features/groceries/view/screens/category_page.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: HydratedStorageDirectory((await getTemporaryDirectory()).path),
+    storageDirectory: HydratedStorageDirectory((await getApplicationDocumentsDirectory()).path),
   );
   runApp(const MyApp());
 }
