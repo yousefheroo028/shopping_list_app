@@ -52,6 +52,14 @@ class _AddGroceryItemBottomSheetState extends State<AddGroceryItemBottomSheet> {
   }
 
   @override
+  void dispose() {
+    nameTextFieldFocusNode.dispose();
+    quantityTextFieldFocusNode.dispose();
+    formKey.currentState?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Padding(
     padding: const .all(12.0),
     child: Form(

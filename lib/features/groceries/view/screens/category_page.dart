@@ -50,6 +50,17 @@ class CategoryPage extends StatelessWidget {
                               await showAdaptiveDialog<bool>(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog.adaptive(
+                                  title: const Text('Are you sure?'),
+                                  content: Column(
+                                    mainAxisSize: .min,
+                                    crossAxisAlignment: .start,
+                                    children: [
+                                      Text('ID: ${state.groceryItems[index].id}'),
+                                      Text('Name: ${state.groceryItems[index].name}'),
+                                      Text('Category: ${state.groceryItems[index].category.name}'),
+                                      Text('Quantity: ${state.groceryItems[index].quantity}'),
+                                    ],
+                                  ),
                                   actions: <Widget>[
                                     TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
                                     FilledButton(
