@@ -25,4 +25,10 @@ class GroceryItemService {
       throw Exception('Failed to post data');
     }
   }
+
+  static void deleteData(String groceryItemId) {
+    http.delete(
+      Uri.https(Constants.firebaseBaseUrl, 'groceries/$groceryItemId.json'),
+    );
+  }
 }

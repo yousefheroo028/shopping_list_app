@@ -46,14 +46,28 @@ class CategoryPage extends StatelessWidget {
                         itemBuilder: (BuildContext context, int index) => Dismissible(
                           key: ValueKey<String>(state.groceryItems[index].id!),
                           direction: .horizontal,
-                          onDismissed: (DismissDirection direction) {
-                            ScaffoldMessenger.of(context).clearSnackBars();
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text('${state.groceryItems[index].name} dismissed')));
-                            groceriesCubit.removeGroceryItem(state.groceryItems[index].id!);
-                            state.groceryItems.removeAt(index);
-                          },
+                          confirmDismiss: (DismissDirection direction) async =>
+                              await showAdaptiveDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog.adaptive(
+                                  actions: <Widget>[
+                                    TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                                    FilledButton(
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context).clearSnackBars();
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(SnackBar(content: Text('${state.groceryItems[index].name} dismissed')));
+                                        groceriesCubit.removeGroceryItem(state.groceryItems[index].id!);
+                                        state.groceryItems.removeAt(index);
+                                        Navigator.pop(context, true);
+                                      },
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
+                                ),
+                              ) ??
+                              null,
                           child: GroceryListItem(item: state.groceryItems[index]),
                         ),
                         itemCount: state.groceryItems.length,

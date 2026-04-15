@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:shopping_list_app/core/enums/categories.dart';
 
-class GroceryItem {
+class GroceryItem with EquatableMixin {
   final String? id;
   final String name;
   final int quantity;
@@ -38,4 +39,7 @@ class GroceryItem {
       category: category ?? this.category,
     );
   }
+
+  @override
+  List<Object?> get props => [id];
 }
