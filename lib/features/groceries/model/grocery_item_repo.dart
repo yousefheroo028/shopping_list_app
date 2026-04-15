@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shopping_list_app/features/groceries/model/grocery_item.dart';
 import 'package:shopping_list_app/features/groceries/model/grocery_item_service.dart';
@@ -16,7 +17,7 @@ class GroceryItemRepo {
     if (items.statusCode == 200) {
       if (items.body == 'null') return <GroceryItem>[];
       final List<GroceryItem> groceryItems = <GroceryItem>[];
-      final Map<String, dynamic> body = json.decode(items.body);
+      final body = await compute<String, dynamic>(json.decode, items.body);
       for (final MapEntry<String, dynamic> item in body.entries) {
         groceryItems.add(GroceryItem.fromJson(item));
       }
