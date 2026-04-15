@@ -8,9 +8,13 @@ class GroceryListItem extends StatelessWidget {
   final GroceryItem item;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-    leading: ColoredBox(color: categories[item.category]!.color, child: const SizedBox(height: 10, width: 10)),
-    title: Text(item.name),
-    trailing: Text('${item.quantity}'),
+  Widget build(BuildContext context) => Row(
+    children: <Widget>[
+      ColoredBox(color: categories[item.category]!.color, child: const SizedBox(height: 16.0, width: 16.0)),
+      const SizedBox(width: 16.0),
+      Text(item.name),
+      const Spacer(),
+      Text('${item.quantity}'),
+    ],
   );
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,26 +23,31 @@ class _AddGroceryItemBottomSheetState extends State<AddGroceryItemBottomSheet> {
   final FocusNode nameTextFieldFocusNode = FocusNode();
   final FocusNode quantityTextFieldFocusNode = FocusNode();
 
+  ValueNotifier<bool> isSending = ValueNotifier<bool>(false);
+
   Future<void> addNewGroceryItem() async {
     if (formKey.currentState!.validate()) {
+      setState(() => isSending.value = true);
       formKey.currentState!.save();
-      final GroceryItem groceryItem = GroceryItem(
-        id: DateTime.now().toString(),
-        name: name,
-        quantity: quantity,
-        category: category,
+      final http.Response response = await context.read<GroceriesCubit>().addGroceryItem(
+        GroceryItem(
+          name: name,
+          quantity: quantity,
+          category: category,
+        ),
       );
-      final http.Response response = await context.read<GroceriesCubit>().addGroceryItem(groceryItem);
       if (!mounted) return;
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Successfully added a new grocery item')),
         );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to add a new grocery item')),
+        );
       }
-      if (kDebugMode) {
-        print('Name: $name, Quantity: $quantity, Category: ${category.name}');
-      }
-      Navigator.pop<GroceryItem>(context, groceryItem);
+      setState(() => isSending.value = false);
+      Navigator.pop(context);
     }
   }
 
@@ -65,6 +69,7 @@ class _AddGroceryItemBottomSheetState extends State<AddGroceryItemBottomSheet> {
               label: Text('Name'),
               border: OutlineInputBorder(),
             ),
+            textCapitalization: .sentences,
             validator: (String? value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a name';
@@ -132,8 +137,22 @@ class _AddGroceryItemBottomSheetState extends State<AddGroceryItemBottomSheet> {
             mainAxisAlignment: .end,
             spacing: 16.0,
             children: <Widget>[
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-              ElevatedButton(onPressed: addNewGroceryItem, child: const Text('Add')),
+              TextButton(onPressed: isSending.value ? null : () => Navigator.pop(context), child: const Text('Cancel')),
+              ValueListenableBuilder<bool>(
+                valueListenable: isSending,
+                builder: (BuildContext context, dynamic value, Widget? child) => ElevatedButton(
+                  onPressed: addNewGroceryItem,
+                  child: isSending.value
+                      ? const Center(
+                          child: SizedBox(
+                            height: 24.0,
+                            width: 24.0,
+                            child: RepaintBoundary(child: CircularProgressIndicator.adaptive(strokeWidth: 2.0)),
+                          ),
+                        )
+                      : const Text('Add'),
+                ),
+              ),
             ],
           ),
         ],

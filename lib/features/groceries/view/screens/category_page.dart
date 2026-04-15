@@ -12,7 +12,6 @@ class CategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final GroceriesCubit groceriesCubit = context.read<GroceriesCubit>();
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Your Groceries'),
         actions: <Widget>[
@@ -33,25 +32,37 @@ class CategoryPage extends StatelessWidget {
         ],
       ),
       body: BlocBuilder<GroceriesCubit, GroceriesState>(
-        builder: (BuildContext context, GroceriesState state) => switch (state) {
-          GroceriesInitial() => const Center(child: Text('There is no Groceries')),
-          GroceriesLoading() => const Center(child: CircularProgressIndicator.adaptive()),
-          GroceriesLoaded() =>
-            state.groceryItems.isEmpty
-                ? const Center(child: Text('There is no Groceries'))
-                : ListView.builder(
-                    itemBuilder: (BuildContext context, int index) => Dismissible(
-                      key: ValueKey<String>(state.groceryItems[index].id),
-                      direction: .horizontal,
-                      onDismissed: (DismissDirection direction) {
-                        groceriesCubit.removeGroceryItem(state.groceryItems[index].id);
-                        state.groceryItems.removeAt(index);
-                      },
-                      child: GroceryListItem(item: state.groceryItems[index]),
+        builder: (BuildContext context, GroceriesState state) => Center(
+          child: switch (state) {
+            GroceriesInitial() => const Text('There is no Groceries'),
+            GroceriesLoading() => const RepaintBoundary(child: CircularProgressIndicator.adaptive()),
+            GroceriesLoaded() =>
+              state.groceryItems.isEmpty
+                  ? const Text('There is no Groceries')
+                  : RefreshIndicator.adaptive(
+                      onRefresh: () => groceriesCubit.refresh(),
+                      child: ListView.separated(
+                        padding: const .all(16.0),
+                        itemBuilder: (BuildContext context, int index) => Dismissible(
+                          key: ValueKey<String>(state.groceryItems[index].id!),
+                          direction: .horizontal,
+                          onDismissed: (DismissDirection direction) {
+                            ScaffoldMessenger.of(context).clearSnackBars();
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(SnackBar(content: Text('${state.groceryItems[index].name} dismissed')));
+                            groceriesCubit.removeGroceryItem(state.groceryItems[index].id!);
+                            state.groceryItems.removeAt(index);
+                          },
+                          child: GroceryListItem(item: state.groceryItems[index]),
+                        ),
+                        itemCount: state.groceryItems.length,
+                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 16.0),
+                      ),
                     ),
-                    itemCount: state.groceryItems.length,
-                  ),
-        },
+            GroceriesError(:final String message) => Text(message),
+          },
+        ),
       ),
     );
   }

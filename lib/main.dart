@@ -28,8 +28,15 @@ class MyApp extends StatelessWidget {
           surface: const Color.fromARGB(255, 42, 51, 59),
         ),
         scaffoldBackgroundColor: const Color.fromARGB(255, 50, 58, 60),
+        snackBarTheme: const SnackBarThemeData(
+          backgroundColor: Color.fromARGB(255, 42, 51, 59),
+          contentTextStyle: TextStyle(color: Colors.white),
+        ),
       ),
-      home: BlocProvider<GroceriesCubit>(create: (BuildContext context) => GroceriesCubit(), child: const CategoryPage()),
+      home: BlocProvider<GroceriesCubit>(
+        create: (BuildContext context) => GroceriesCubit(),
+        child: const CategoryPage(),
+      ),
     );
   }
 }
