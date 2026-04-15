@@ -18,12 +18,11 @@ class CategoryPage extends StatelessWidget {
           IconButton(
             onPressed: () => showModalBottomSheet<GroceryItem>(
               context: context,
-              builder: (_) => SizedBox(
-                height: MediaQuery.heightOf(context) / 2,
-                child: BlocProvider<GroceriesCubit>.value(
-                  value: groceriesCubit,
-                  child: const AddGroceryItemBottomSheet(),
-                ),
+              isScrollControlled: true,
+              constraints: BoxConstraints(minHeight: MediaQuery.heightOf(context) / 2),
+              builder: (_) => BlocProvider<GroceriesCubit>.value(
+                value: groceriesCubit,
+                child: const AddGroceryItemBottomSheet(),
               ),
               showDragHandle: true,
             ),

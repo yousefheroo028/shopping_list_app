@@ -61,10 +61,11 @@ class _AddGroceryItemBottomSheetState extends State<AddGroceryItemBottomSheet> {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const .all(12.0),
+    padding: .only(right: 12.0, left: 12.0, top: 12.0, bottom: MediaQuery.viewInsetsOf(context).bottom),
     child: Form(
       key: formKey,
       child: Column(
+        mainAxisSize: .min,
         spacing: 16.0,
         children: <Widget>[
           TextFormField(
