@@ -16,7 +16,7 @@ class CategoryPage extends StatelessWidget {
         title: const Text('Your Groceries'),
         actions: <Widget>[
           IconButton(
-            onPressed: () => showModalBottomSheet<GroceryItem>(
+            onPressed: () => showModalBottomSheet(
               context: context,
               isScrollControlled: true,
               constraints: BoxConstraints(minHeight: MediaQuery.heightOf(context) / 2),
