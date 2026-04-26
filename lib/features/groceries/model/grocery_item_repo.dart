@@ -19,7 +19,8 @@ class GroceryItemRepo {
       final List<GroceryItem> groceryItems = <GroceryItem>[];
       final body = await compute<String, dynamic>(json.decode, items.body);
       for (final MapEntry<String, dynamic> item in body.entries) {
-        groceryItems.add(GroceryItem.fromJson(item));
+        (item.value as Map<String, dynamic>).putIfAbsent('id', () => item.key);
+        groceryItems.add(GroceryItem.fromJson(item.value));
       }
       return groceryItems;
     }

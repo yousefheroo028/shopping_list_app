@@ -4,33 +4,28 @@ sealed class GroceriesState with EquatableMixin {
   final List<GroceryItem> groceryItems;
 
   const GroceriesState(this.groceryItems);
+
+  @override
+  List<Object?> get props => [groceryItems];
 }
 
 final class GroceriesInitial extends GroceriesState {
-  const GroceriesInitial(super.groceryItems);
-
-  @override
-  List<Object?> get props => <Object?>[];
+  GroceriesInitial() : super([]);
 }
 
 final class GroceriesLoading extends GroceriesState {
-  const GroceriesLoading(super.groceryItems);
-
-  @override
-  List<Object?> get props => super.groceryItems;
+  GroceriesLoading(super.groceryItems);
 }
 
 final class GroceriesLoaded extends GroceriesState {
-  const GroceriesLoaded(super.groceryItems);
-
-  @override
-  List<Object?> get props => super.groceryItems;
+  GroceriesLoaded(super.groceryItems);
 }
 
 final class GroceriesError extends GroceriesState {
   GroceriesError(this.message) : super(<GroceryItem>[]);
 
   final String message;
+
   @override
-  List<Object?> get props => super.groceryItems;
+  List<Object?> get props => [message];
 }

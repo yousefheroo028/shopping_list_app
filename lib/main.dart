@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shopping_list_app/features/groceries/model/grocery_item_repo.dart';
 import 'package:shopping_list_app/features/groceries/view-model/groceries_cubit.dart';
 import 'package:shopping_list_app/features/groceries/view/screens/category_page.dart';
 
@@ -10,7 +11,12 @@ Future<void> main() async {
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: HydratedStorageDirectory((await getApplicationDocumentsDirectory()).path),
   );
-  runApp(const MyApp());
+  runApp(
+    BlocProvider<GroceriesCubit>(
+      create: (BuildContext context) => GroceriesCubit(GroceryItemRepo()),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -33,10 +39,7 @@ class MyApp extends StatelessWidget {
           contentTextStyle: TextStyle(color: Colors.white),
         ),
       ),
-      home: BlocProvider<GroceriesCubit>(
-        create: (BuildContext context) => GroceriesCubit(),
-        child: const CategoryPage(),
-      ),
+      home: const CategoryPage(),
     );
   }
 }

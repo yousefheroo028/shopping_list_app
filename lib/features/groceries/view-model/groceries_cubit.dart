@@ -10,25 +10,20 @@ import 'package:shopping_list_app/features/groceries/model/grocery_item_service.
 part 'groceries_state.dart';
 
 class GroceriesCubit extends HydratedCubit<GroceriesState> {
-  final GroceryItemRepo repo = GroceryItemRepo();
+  final GroceryItemRepo repo;
 
-  GroceriesCubit() : super(const GroceriesInitial(<GroceryItem>[])) {
-    refresh();
-  }
+  GroceriesCubit(this.repo) : super(GroceriesInitial());
 
   Future<void> refresh() async {
     emit(GroceriesLoading(state.groceryItems));
-    try {
-      repo.getGroceryItems().then((List<GroceryItem>? value) {
-        if (value == null) {
-          emit(GroceriesError('There is an error.'));
-          return;
-        }
-        emit(GroceriesLoaded(value));
-      });
-    } catch (e) {
-      emit(GroceriesError(e.toString()));
-    }
+    await repo
+        .getGroceryItems()
+        .then((List<GroceryItem>? value) {
+          emit(GroceriesLoaded(value ?? []));
+        })
+        .onError((error, stackTrace) {
+          emit(GroceriesError(error.toString()));
+        });
   }
 
   Future<http.Response> addGroceryItem(GroceryItem groceryItem) async {
@@ -45,9 +40,9 @@ class GroceriesCubit extends HydratedCubit<GroceriesState> {
 
   @override
   GroceriesState? fromJson(Map<String, dynamic> json) {
-    return GroceriesLoaded(
-      (json['groceryItems'] as List<dynamic>).map((dynamic encodedItem) => GroceryItem.fromJson(encodedItem)).toList(),
-    );
+    final rawList = json['groceryItems'] as List;
+    final items = rawList.map((e) => GroceryItem.fromJson(e)).toList();
+    return GroceriesLoaded(items);
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_list_app/features/groceries/view-model/groceries_cubit.dart';
@@ -11,12 +12,14 @@ class GorceriesListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListView.separated(
     padding: const .all(16.0),
+    physics: const NeverScrollableScrollPhysics(),
+    shrinkWrap: true,
     itemBuilder: (BuildContext context, int index) => Dismissible(
       key: ValueKey<String>(state.groceryItems[index].id!),
       direction: .horizontal,
       confirmDismiss: (DismissDirection direction) async => await showAdaptiveDialog<bool>(
         context: context,
-        builder: (BuildContext context) => AlertDialog.adaptive(
+        builder: (_) => AlertDialog.adaptive(
           title: const Text('Are you sure?'),
           content: Column(
             mainAxisSize: .min,
@@ -36,8 +39,10 @@ class GorceriesListWidget extends StatelessWidget {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text('${state.groceryItems[index].name} dismissed')));
+                if (kDebugMode) {
+                  print('${state.groceryItems[index].id!} Deleted');
+                }
                 context.read<GroceriesCubit>().removeGroceryItem(state.groceryItems[index].id!);
-                state.groceryItems.removeAt(index);
                 Navigator.pop(context, true);
               },
               child: const Text('Delete'),

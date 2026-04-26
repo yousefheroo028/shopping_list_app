@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shopping_list_app/core/enums/categories.dart';
 
 class GroceryItem with EquatableMixin {
@@ -10,19 +11,23 @@ class GroceryItem with EquatableMixin {
   const GroceryItem({this.id, required this.name, required this.quantity, required this.category});
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{
+    return {
+      'id': id,
       'name': name,
       'quantity': quantity,
       'category': category.name,
     };
   }
 
-  factory GroceryItem.fromJson(MapEntry<String, dynamic> json) {
+  factory GroceryItem.fromJson(Map<String, dynamic> json) {
+    if (kDebugMode) {
+      print(json);
+    }
     return GroceryItem(
-      id: json.key,
-      name: json.value['name'] as String,
-      quantity: json.value['quantity'] as int,
-      category: CategoryEnum.values.byName(json.value['category'] as String),
+      id: json['id'],
+      name: json['name'] as String,
+      quantity: json['quantity'] as int,
+      category: CategoryEnum.values.byName(json['category'] as String),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shopping_list_app/core/constants.dart';
 import 'package:shopping_list_app/features/groceries/model/grocery_item.dart';
@@ -10,6 +11,9 @@ class GroceryItemService {
       Uri.https(Constants.firebaseBaseUrl, 'groceries.json'),
       headers: <String, String>{'Content-Type': 'application/json'},
     );
+    if (kDebugMode) {
+      print(response.body);
+    }
     return response;
   }
 
