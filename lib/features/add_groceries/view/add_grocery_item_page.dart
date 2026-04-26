@@ -56,6 +56,7 @@ class _AddGroceryItemBottomSheetState extends State<AddGroceryItemBottomSheet> {
     nameTextFieldFocusNode.dispose();
     quantityTextFieldFocusNode.dispose();
     formKey.currentState?.dispose();
+    isSending.dispose();
     super.dispose();
   }
 
